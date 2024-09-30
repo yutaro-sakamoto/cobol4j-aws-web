@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: "22"
           cache: "npm"
-          cache-dependency-path: "package-lock.json"
+          cache-dependency-path: "infrastructre/package-lock.json"
 
       - run: npm ci
         working-directory: ./infrastructure
