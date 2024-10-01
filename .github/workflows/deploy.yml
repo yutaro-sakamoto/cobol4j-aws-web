@@ -31,6 +31,7 @@ jobs:
           cache-dependency-path: "package-lock.json"
 
       - name: Deploy
+        working-directory: ./infrastructure
         run: |
           npm ci
           npx cdk deploy --require-approval never -O output.js
