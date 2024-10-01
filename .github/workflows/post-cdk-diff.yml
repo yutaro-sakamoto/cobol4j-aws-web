@@ -27,6 +27,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run `cdk diff`
+        working-directory: ./infrastructure
         run: |
           npm install
           echo '# cdk diffの結果' > cdk-diff-result.txt
@@ -37,7 +38,7 @@ jobs:
         with:
           script: |
             const fs = require('fs')
-            const result = fs.readFileSync('cdk-diff-result.txt', 'utf8')
+            const result = fs.readFileSync('infrastructure/cdk-diff-result.txt', 'utf8')
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
