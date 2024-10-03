@@ -1,8 +1,8 @@
 {
-  "name": "start-cdk",
+  "name": "cobol4j-aws-web",
   "version": "0.1.0",
   "bin": {
-    "start-cdk": "bin/start-cdk.js"
+    "cobol4j-aws-web": "bin/cobol4j-aws-web.js"
   },
   "scripts": {
     "build": "tsc",

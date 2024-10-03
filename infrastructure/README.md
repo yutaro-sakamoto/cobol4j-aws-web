@@ -68,8 +68,8 @@ Secretsの設定方法は[公式ドキュメント](https://docs.github.com/en/a
 以下のコマンドを実行して、このリポジトリをクローンし、新しいリポジトリにプッシュする。
 
 ```bash
-git clone https://github.com/yutaro-sakamoto/start-cdk.git
-cd start-cdk
+git clone https://github.com/yutaro-sakamoto/cobol4j-aws-web.git
+cd cobol4j-aws-web
 rm -rf .git LICENSE
 git init
 git remote add origin <新しいリポジトリのURL>
@@ -103,7 +103,7 @@ chmod +x .git/hooks/pre-commit
 ## スタックのリネーム
 
 このテンプレートでは、スタック名は`StartCdkStack`である。
-`bin/start-cdk.ts`や`lib/start-cdk-stack.ts`を編集して、適切なスタック名に変更する。
+`bin/cobol4j-aws-web.ts`や`lib/cobol4j-aws-web-stack.ts`を編集して、適切なスタック名に変更する。
 
 # 開発フロー
 
@@ -128,7 +128,7 @@ chmod +x .git/hooks/pre-commit
 ## cdk-nag
 
 デフォルトで[cdk-nag](https://github.com/cdklabs/cdk-nag)による検証が有効になっている。
-無効にするには、bin/start-cdk.tsの下記の行を削除すること。
+無効にするには、bin/cobol4j-aws-web.tsの下記の行を削除すること。
 
 ```typescript
 Aspects.of(app).add(new AwsSolutionsChecks({ verbose: true }));
