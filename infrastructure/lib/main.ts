@@ -5,7 +5,7 @@ import { Construct } from "constructs";
 /**
  * スタック
  */
-export class StartCDKStack extends cdk.Stack {
+export class Cobol4JAwsWebStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 

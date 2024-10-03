@@ -1,5 +1,5 @@
 {
-  "app": "npx ts-node --prefer-ts-exts bin/start-cdk.ts",
+  "app": "npx ts-node --prefer-ts-exts bin/cobol4j-aws-web.ts",
   "watch": {
     "include": ["**"],
     "exclude": [
