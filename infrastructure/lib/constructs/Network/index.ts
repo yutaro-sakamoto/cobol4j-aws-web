@@ -23,8 +23,8 @@ export class Network extends Construct {
       subnetConfiguration: [
         {
           cidrMask: 24,
-          name: "Private",
-          subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
+          name: "Public",
+          subnetType: ec2.SubnetType.PUBLIC,
         },
       ],
     });

@@ -1,8 +1,11 @@
 import { Construct } from "constructs";
+import * as cdk from "aws-cdk-lib";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import * as ec2 from "aws-cdk-lib/aws-ec2";
 import { ApplicationLoadBalancedFargateService } from "aws-cdk-lib/aws-ecs-patterns";
 import { StackProps } from "aws-cdk-lib";
+import * as s3 from "aws-cdk-lib/aws-s3";
+import { NagSuppressions } from "cdk-nag";
 
 /**
  * ECSのプロパティ
@@ -17,6 +20,8 @@ export interface ECSProps extends StackProps {
  * ECSクラスタ
  */
 export class ECS extends Construct {
+  private logBucket: s3.Bucket;
+
   constructor(scope: Construct, id: string, props: ECSProps) {
     super(scope, id);
 
@@ -26,6 +31,7 @@ export class ECS extends Construct {
       containerInsights: true,
     });
 
+    // Fargateサービスを作成
     const loadBalancedFargateService =
       new ApplicationLoadBalancedFargateService(this, "Service", {
         cluster,
@@ -50,5 +56,36 @@ export class ECS extends Construct {
     scalableTarget.scaleOnMemoryUtilization("MemoryScaling", {
       targetUtilizationPercent: 50,
     });
+
+    this.logBucket = new s3.Bucket(this, "Bucket", {
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
+      bucketName: "my-alb-bucket",
+      enforceSSL: true,
+    });
+
+    loadBalancedFargateService.loadBalancer.logAccessLogs(this.logBucket);
+  }
+
+  /**
+   * NAGのチェックを抑制する
+   */
+  public addCdkNagSuppressions(parentStack: cdk.Stack) {
+    NagSuppressions.addResourceSuppressionsByPath(
+      parentStack,
+      "/StartCDKStack/ECS/Service/LB/SecurityGroup/Resource",
+      [
+        {
+          id: "AwsSolutions-EC23",
+          reason: "Security groups of web services allow large port ranges.",
+        },
+      ],
+    );
+    NagSuppressions.addResourceSuppressions(this.logBucket, [
+      {
+        id: "AwsSolutions-S1",
+        reason: "ロギング用のバケットのアクセスログは不要",
+      },
+    ]);
   }
 }

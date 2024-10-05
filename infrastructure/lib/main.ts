@@ -7,12 +7,14 @@ import { ECS } from "./constructs/ECS";
  * スタック
  */
 export class Cobol4JAwsWebStack extends cdk.Stack {
+  private ecsCluster: ECS;
+
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
     const network = new Network(this, "Network");
 
-    new ECS(this, "ECS", {
+    this.ecsCluster = new ECS(this, "ECS", {
       vpc: network.vpc,
     });
   }
@@ -21,6 +23,6 @@ export class Cobol4JAwsWebStack extends cdk.Stack {
    * NAGのチェックを抑制する
    */
   public addCdkNagSuppressions() {
-    // 必要に応じてNag suppressionsを追加
+    this.ecsCluster.addCdkNagSuppressions(this);
   }
 }
