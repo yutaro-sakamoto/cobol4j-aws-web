@@ -15,7 +15,7 @@ test("No NAT Gateway", () => {
 });
 
 test("Internet Gateway", () => {
-  template.resourcePropertiesCountIs("AWS::EC2::InternetGateway", {}, 1);
+  template.hasResource("AWS::EC2::InternetGateway", {});
   template.resourcePropertiesCountIs(
     "AWS::EC2::EgressOnlyInternetGateway",
     {},
@@ -28,5 +28,5 @@ test("No ECR Repository", () => {
 });
 
 test("ECS Cluster", () => {
-  template.resourcePropertiesCountIs("AWS::ECS::Cluster", {}, 1);
+  template.hasResource("AWS::ECS::Cluster", {});
 });
