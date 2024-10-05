@@ -60,7 +60,6 @@ export class ECS extends Construct {
     this.logBucket = new s3.Bucket(this, "Bucket", {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
-      bucketName: "my-alb-bucket",
       enforceSSL: true,
     });
 
