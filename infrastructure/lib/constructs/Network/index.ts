@@ -18,15 +18,33 @@ export class Network extends Construct {
     // VPCを作成
     this.vpc = new ec2.Vpc(this, "Vpc", {
       natGateways: 0,
-      createInternetGateway: false,
+      createInternetGateway: true,
       maxAzs: 2,
       subnetConfiguration: [
         {
           cidrMask: 24,
-          name: "Private",
-          subnetType: ec2.SubnetType.PRIVATE_WITH_EGRESS,
+          name: "Public",
+          subnetType: ec2.SubnetType.PUBLIC,
         },
       ],
+    });
+
+    // VPCエンドポイントを作成
+    this.vpc.addInterfaceEndpoint("ECREndpoint", {
+      service: ec2.InterfaceVpcEndpointAwsService.ECR,
+    });
+
+    this.vpc.addInterfaceEndpoint("ECRDockerEndpoint", {
+      service: ec2.InterfaceVpcEndpointAwsService.ECR_DOCKER,
+    });
+
+    this.vpc.addInterfaceEndpoint("CloudWatchEndpoint", {
+      service: ec2.InterfaceVpcEndpointAwsService.CLOUDWATCH_LOGS,
+    });
+
+    new ec2.GatewayVpcEndpoint(this, "S3Endpoint", {
+      service: ec2.GatewayVpcEndpointAwsService.S3,
+      vpc: this.vpc,
     });
 
     // VPC Flow Logsを作成
