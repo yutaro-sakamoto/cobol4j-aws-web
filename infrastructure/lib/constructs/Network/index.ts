@@ -18,7 +18,7 @@ export class Network extends Construct {
     // VPCを作成
     this.vpc = new ec2.Vpc(this, "Vpc", {
       natGateways: 0,
-      createInternetGateway: false,
+      createInternetGateway: true,
       maxAzs: 2,
       subnetConfiguration: [
         {
