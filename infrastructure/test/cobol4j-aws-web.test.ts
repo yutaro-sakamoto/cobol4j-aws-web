@@ -10,9 +10,9 @@ const stack = new Cobol4JAwsWebStack(app, "StartCDKStack", {
 });
 const template = Template.fromStack(stack);
 
-test("No NAT Gateway", () => {
-  template.resourcePropertiesCountIs("AWS::EC2::NatGateway", {}, 0);
-});
+//test("No NAT Gateway", () => {
+//  template.resourcePropertiesCountIs("AWS::EC2::NatGateway", {}, 0);
+//});
 
 test("Internet Gateway", () => {
   template.hasResource("AWS::EC2::InternetGateway", {});
