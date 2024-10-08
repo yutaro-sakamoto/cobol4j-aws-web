@@ -1,8 +1,7 @@
 import * as cdk from "aws-cdk-lib";
 import { Construct } from "constructs";
-//import { Network } from "./constructs/Network";
+import { Network } from "./constructs/Network";
 //import { ECS } from "./constructs/ECS";
-import * as ec2 from "aws-cdk-lib/aws-ec2";
 import { ApplicationLoadBalancedFargateService } from "aws-cdk-lib/aws-ecs-patterns";
 import * as ecs from "aws-cdk-lib/aws-ecs";
 import { NagSuppressions } from "cdk-nag";
@@ -16,14 +15,14 @@ export class Cobol4JAwsWebStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    //const network = new Network(this, "Network");
+    const network = new Network(this, "Network");
 
     //this.ecsCluster = new ECS(this, "ECS", {
     //  vpc: network.vpc,
     //});
-    const vpc = new ec2.Vpc(this, "MyVpc", { maxAzs: 2 });
+    //const vpc = new ec2.Vpc(this, "MyVpc", { maxAzs: 2 });
     const cluster = new ecs.Cluster(this, "Cluster", {
-      vpc,
+      vpc: network.vpc,
       containerInsights: true,
     });
 
@@ -41,16 +40,16 @@ export class Cobol4JAwsWebStack extends cdk.Stack {
    */
   public addCdkNagSuppressions() {
     //this.ecsCluster.addCdkNagSuppressions(this);
-    NagSuppressions.addResourceSuppressionsByPath(
-      this,
-      "/StartCDKStack/MyVpc/Resource",
-      [
-        {
-          id: "AwsSolutions-VPC7",
-          reason: "VPC Flow Logsを作成していない",
-        },
-      ],
-    );
+    //NagSuppressions.addResourceSuppressionsByPath(
+    //  this,
+    //  "/StartCDKStack/MyVpc/Resource",
+    //  [
+    //    {
+    //      id: "AwsSolutions-VPC7",
+    //      reason: "VPC Flow Logsを作成していない",
+    //    },
+    //  ],
+    //);
     NagSuppressions.addResourceSuppressionsByPath(
       this,
       "/StartCDKStack/FargateService/LB/SecurityGroup/Resource",

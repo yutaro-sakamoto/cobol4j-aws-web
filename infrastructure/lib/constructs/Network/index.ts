@@ -17,16 +17,16 @@ export class Network extends Construct {
 
     // VPCを作成
     this.vpc = new ec2.Vpc(this, "Vpc", {
-      natGateways: 0,
+      //natGateways: 0,
       createInternetGateway: true,
       maxAzs: 2,
-      subnetConfiguration: [
-        {
-          cidrMask: 24,
-          name: "Public",
-          subnetType: ec2.SubnetType.PUBLIC,
-        },
-      ],
+      //subnetConfiguration: [
+      //  {
+      //    cidrMask: 24,
+      //    name: "Public",
+      //    subnetType: ec2.SubnetType.PUBLIC,
+      //  },
+      //],
     });
 
     // VPCエンドポイントを作成
