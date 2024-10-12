@@ -32,21 +32,12 @@ export class ECS extends Construct {
     });
 
     // Fargateサービスを作成
-    //const loadBalancedFargateService =
     new ApplicationLoadBalancedFargateService(this, "Service", {
       cluster,
       taskImageOptions: {
         image: ecs.ContainerImage.fromRegistry("amazon/amazon-ecs-sample"),
       },
     });
-
-    //this.logBucket = new s3.Bucket(this, "Bucket", {
-    //  removalPolicy: cdk.RemovalPolicy.DESTROY,
-    //  autoDeleteObjects: true,
-    //  enforceSSL: true,
-    //});
-
-    //loadBalancedFargateService.loadBalancer.logAccessLogs(this.logBucket);
   }
 
   /**
@@ -73,11 +64,5 @@ export class ECS extends Construct {
         },
       ],
     );
-    //NagSuppressions.addResourceSuppressions(this.logBucket, [
-    //  {
-    //    id: "AwsSolutions-S1",
-    //    reason: "ロギング用のバケットのアクセスログは不要",
-    //  },
-    //]);
   }
 }
