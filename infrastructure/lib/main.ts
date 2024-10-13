@@ -17,6 +17,11 @@ export class Cobol4JAwsWebStack extends cdk.Stack {
     this.ecsCluster = new ECS(this, "ECS", {
       vpc: network.vpc,
     });
+
+    new cdk.CfnOutput(this, "LoadBalancerDNS", {
+      value: this.ecsCluster.dnsName,
+      description: "The DNS name of the ALB",
+    });
   }
 
   /**

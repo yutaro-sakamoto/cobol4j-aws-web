@@ -20,7 +20,7 @@ export interface ECSProps extends StackProps {
  * ECSクラスタ
  */
 export class ECS extends Construct {
-  //private logBucket: s3.Bucket;
+  public readonly dnsName: string;
 
   constructor(scope: Construct, id: string, props: ECSProps) {
     super(scope, id);
@@ -32,12 +32,18 @@ export class ECS extends Construct {
     });
 
     // Fargateサービスを作成
-    new ApplicationLoadBalancedFargateService(this, "Service", {
-      cluster,
-      taskImageOptions: {
-        image: ecs.ContainerImage.fromRegistry("amazon/amazon-ecs-sample"),
+    const albEcsService = new ApplicationLoadBalancedFargateService(
+      this,
+      "Service",
+      {
+        cluster,
+        taskImageOptions: {
+          image: ecs.ContainerImage.fromRegistry("amazon/amazon-ecs-sample"),
+        },
       },
-    });
+    );
+
+    this.dnsName = albEcsService.loadBalancer.loadBalancerDnsName;
   }
 
   /**
