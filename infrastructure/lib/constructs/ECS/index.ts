@@ -40,6 +40,8 @@ export class ECS extends Construct {
         taskImageOptions: {
           image: ecs.ContainerImage.fromRegistry("amazon/amazon-ecs-sample"),
         },
+        assignPublicIp: false,
+        publicLoadBalancer: false,
       },
     );
 
