@@ -44,5 +44,22 @@ export class Network extends Construct {
         vpcFlowLogRole,
       ),
     });
+
+    // Client VPNエンドポイントを作成
+    const certificateArn = process.env.AWS_CLIENT_VPN_CERTIFICATE_ARN;
+    if (!certificateArn) {
+      throw new Error(
+        "environment variable AWS_CLIENT_VPN_CERTIFICATE_ARN is required",
+      );
+    }
+
+    new ec2.ClientVpnEndpoint(this, "ClientVpnEndpoint", {
+      vpc: this.vpc,
+      cidr: "10.100.0.0/16",
+      serverCertificateArn: certificateArn,
+      clientCertificateArn: certificateArn,
+      splitTunnel: true,
+      dnsServers: ["10.0.0.2"],
+    });
   }
 }
