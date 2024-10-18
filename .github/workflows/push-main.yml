@@ -33,3 +33,12 @@ jobs:
       contents: read
     secrets: inherit
     uses: ./.github/workflows/deploy.yml
+
+  # サーバアプリケーションのビルドする
+  build-server-app:
+    needs: check-workflows
+    permissions:
+      contents: read
+    uses: ./.github/workflows/server-app.yml
+    with:
+      run_tests: false
