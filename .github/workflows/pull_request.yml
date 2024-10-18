@@ -38,3 +38,10 @@ jobs:
       pull-requests: write
     secrets: inherit
     uses: ./.github/workflows/post-cdk-diff.yml
+
+  # サーバアプリケーションのビルドとテストを実行する
+  test-server-app:
+    needs: check-workflows
+    permissions:
+      contents: read
+    uses: ./.github/workflows/server-app.yml

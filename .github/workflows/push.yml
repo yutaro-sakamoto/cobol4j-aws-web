@@ -21,9 +21,16 @@ jobs:
     uses: ./.github/workflows/check-workflows.yml
 
   # workflowファイル全体のチェックが終わったら、テストを実行する
-  test:
+  test-infrastructure:
     needs: check-workflows
     permissions:
       contents: read
     secrets: inherit
     uses: ./.github/workflows/test.yml
+
+  # サーバアプリケーションのビルドとテストを実行する
+  test-server-app:
+    needs: check-workflows
+    permissions:
+      contents: read
+    uses: ./.github/workflows/server-app.yml
