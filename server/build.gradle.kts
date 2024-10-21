@@ -1,5 +1,17 @@
-plugins {
-    id("cpp-application")
+import java.io.ByteArrayOutputStream
+
+// Git管理下にあるファイルを取得する関数
+fun getGitManagedFiles(dir: File): FileTree {
+    val output = ByteArrayOutputStream()
+    project.exec {
+        workingDir = dir
+        commandLine("git", "ls-files", "-z")
+        standardOutput = output
+    }
+    val gitFiles = output.toString().split("\u0000")
+    return fileTree(dir) {
+        include(gitFiles)
+    }
 }
 
 // opensource COBOL 4J のビルドタスクを追加
@@ -11,7 +23,7 @@ tasks.register<Exec>("buildCompiler") {
     workingDir = file("${project.projectDir}/opensourcecobol4j/")
 
     // 入力ファイルと出力ファイルを指定
-    inputs.files(fileTree("${project.projectDir}/opensourcecobol4j"))
+    inputs.files(getGitManagedFiles(file("${project.projectDir}/opensourcecobol4j/")))
     outputs.files(
         file("${project.projectDir}/compiler_bin/lib/opensourcecobol4j/libcobj.jar"),
         file("${project.projectDir}/compiler_bin/bin/cobj"),
@@ -55,6 +67,9 @@ tasks.register<Exec>("buildCobol") {
     """)
 }
 
-tasks.named("build").configure {
+// buildタスクを明示的に定義
+tasks.register("build") {
+    group = "build"
+    description = "Builds the project"
     dependsOn("buildCobol")
 }
