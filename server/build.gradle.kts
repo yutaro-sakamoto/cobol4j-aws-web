@@ -1,9 +1,5 @@
 import java.io.ByteArrayOutputStream
 
-plugins {
-    id("cpp-application")
-}
-
 // Git管理下にあるファイルを取得する関数
 fun getGitManagedFiles(dir: File): FileTree {
     val output = ByteArrayOutputStream()
@@ -44,6 +40,7 @@ tasks.register<Exec>("buildCompiler") {
 }
 
 tasks.register<Exec>("buildCobol") {
+    dependsOn("buildCompiler")
 
     group = "build"
     description = "Build COBOL source files"
@@ -70,6 +67,9 @@ tasks.register<Exec>("buildCobol") {
     """)
 }
 
-tasks.named("build").configure {
+// buildタスクを明示的に定義
+tasks.register("build") {
+    group = "build"
+    description = "Builds the project"
     dependsOn("buildCobol")
 }
