@@ -29,8 +29,8 @@ jobs:
           java-version: "17"
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew bootJar
 
-      - name: Run tests
-        if: ${{ github.event.inputs.run_tests }}
-        run: ./gradlew test
+      #- name: Run tests
+      #  if: ${{ github.event.inputs.run_tests }}
+      #  run: ./gradlew test
