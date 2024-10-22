@@ -2,3 +2,7 @@
 build
 compiler_bin
 cobol_converted
+json
+app/src/main/java/cobol4j/aws/web/sample.java
+app/src/main/java/cobol4j/aws/web/sampleController.java
+app/src/main/java/cobol4j/aws/web/sampleRecord.java

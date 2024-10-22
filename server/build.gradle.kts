@@ -14,26 +14,35 @@ fun getGitManagedFiles(dir: File): FileTree {
     }
 }
 
+val compilerBinDir = "${project.projectDir}/compiler_bin"
+val libcobjJar = "${compilerBinDir}/lib/opensourcecobol4j/libcobj.jar"
+val cobj = "${compilerBinDir}/bin/cobj"
+val cobjApi = "${compilerBinDir}/bin/cobj-api"
+
 // opensource COBOL 4J のビルドタスクを追加
 tasks.register<Exec>("buildCompiler") {
     group = "build"
     description = "Build opensource COBOL 4J"
 
     // 作業ディレクトリを指定
-    workingDir = file("${project.projectDir}/opensourcecobol4j/")
+    val opensourcecobol4jDir = file("${project.projectDir}/opensourcecobol4j/")
 
-    // 入力ファイルと出力ファイルを指定
-    inputs.files(getGitManagedFiles(file("${project.projectDir}/opensourcecobol4j/")))
+    workingDir = opensourcecobol4jDir
+
+    // 入力ファイルを指定
+    inputs.files(getGitManagedFiles(opensourcecobol4jDir))
+
+    // 出力ファイルを指定
     outputs.files(
-        file("${project.projectDir}/compiler_bin/lib/opensourcecobol4j/libcobj.jar"),
-        file("${project.projectDir}/compiler_bin/bin/cobj"),
-        file("${project.projectDir}/compiler_bin/bin/cobj-api"),
+        file(libcobjJar),
+        file(cobj),
+        file(cobjApi),
     )
 
     // 実行コマンドを指定
     commandLine("sh", "-c", """
-        mkdir -p ${project.projectDir}/compiler_bin &&
-        ./configure --prefix=${project.projectDir}/compiler_bin &&
+        mkdir -p ${compilerBinDir} &&
+        ./configure --prefix=${compilerBinDir} &&
         make &&
         make install
     """.trimIndent())
@@ -45,25 +54,34 @@ tasks.register<Exec>("buildCobol") {
     group = "build"
     description = "Build COBOL source files"
 
-    // 作業ディレクトリを指定
-    workingDir = file("${project.projectDir}/cobol/")
+    val cobolDir = "${project.projectDir}/cobol/"
+    val javaDir = "${project.projectDir}/app/src/main/java/cobol4j/aws/web/"
+    val jsonDir = "${project.projectDir}/json"
 
+    // 作業ディレクトリを指定
+    workingDir = file(cobolDir)
+
+    // 入力ファイルと出力ファイルを指定
     inputs.files(
-        file("${project.projectDir}/compiler_bin/lib/opensourcecobol4j/libcobj.jar"),
-        file("${project.projectDir}/compiler_bin/bin/cobj"),
-        file("${project.projectDir}/compiler_bin/bin/cobj-api"),
-        fileTree("${project.projectDir}/cobol"),
+        file(libcobjJar),
+        file(cobj),
+        file(cobjApi),
+        fileTree(cobolDir),
     )
 
+    // 出力ファイルを指定
     outputs.files(
-        fileTree("${project.projectDir}/cobol_converted"),
+        file("${javaDir}/sample.java"),
+        file("${javaDir}/sampleController.java"),
+        file("${javaDir}/sampleRecord.java"),
+        file("${jsonDir}/info_sample.json"),
     )
 
     commandLine("sh", "-c", """
-        mkdir -p ${project.projectDir}/cobol_converted &&
-        ${project.projectDir}/compiler_bin/bin/cobj -info-json-dir=${project.projectDir}/cobol_converted -C *.cbl &&
-        mv *.java ${project.projectDir}/cobol_converted &&
-        CLASSPATH=:${project.projectDir}/compiler_bin/lib/opensourcecobol4j/libcobj.jar ${project.projectDir}/compiler_bin/bin/cobj-api --output-dir=${project.projectDir}/cobol_converted ${project.projectDir}/cobol_converted/*.json
+        mkdir -p ${jsonDir} &&
+        ${cobj} -info-json-dir=${jsonDir} -C *.cbl &&
+        mv *.java ${javaDir} &&
+        CLASSPATH=:${libcobjJar} ${cobjApi} --output-dir=${javaDir} ${jsonDir}/info_sample.json
     """)
 }
 

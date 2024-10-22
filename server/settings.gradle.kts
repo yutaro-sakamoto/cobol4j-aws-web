@@ -11,4 +11,4 @@ plugins {
 }
 
 rootProject.name = "cobol4j-aws-web"
-include("app")
+//include("app")
