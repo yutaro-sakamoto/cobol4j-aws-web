@@ -14,26 +14,33 @@ fun getGitManagedFiles(dir: File): FileTree {
     }
 }
 
+val compilerBinDir = "${project.projectDir}/compiler_bin"
+val libcobjJar = "${compilerBinDir}/lib/opensourcecobol4j/libcobj.jar"
+val cobj = "${compilerBinDir}/bin/cobj"
+val cobjApi = "${compilerBinDir}/bin/cobj-api"
+
 // opensource COBOL 4J のビルドタスクを追加
 tasks.register<Exec>("buildCompiler") {
     group = "build"
     description = "Build opensource COBOL 4J"
 
     // 作業ディレクトリを指定
-    workingDir = file("${project.projectDir}/opensourcecobol4j/")
+    val opensourcecobol4jDir = file("${project.projectDir}/opensourcecobol4j/")
+
+    workingDir = opensourcecobol4jDir
 
     // 入力ファイルと出力ファイルを指定
-    inputs.files(getGitManagedFiles(file("${project.projectDir}/opensourcecobol4j/")))
+    inputs.files(getGitManagedFiles(opensourcecobol4jDir))
     outputs.files(
-        file("${project.projectDir}/compiler_bin/lib/opensourcecobol4j/libcobj.jar"),
-        file("${project.projectDir}/compiler_bin/bin/cobj"),
-        file("${project.projectDir}/compiler_bin/bin/cobj-api"),
+        file(libcobjJar),
+        file(cobj),
+        file(cobjApi),
     )
 
     // 実行コマンドを指定
     commandLine("sh", "-c", """
-        mkdir -p ${project.projectDir}/compiler_bin &&
-        ./configure --prefix=${project.projectDir}/compiler_bin &&
+        mkdir -p ${compilerBinDir} &&
+        ./configure --prefix=${compilerBinDir} &&
         make &&
         make install
     """.trimIndent())
@@ -49,9 +56,9 @@ tasks.register<Exec>("buildCobol") {
     workingDir = file("${project.projectDir}/cobol/")
 
     inputs.files(
-        file("${project.projectDir}/compiler_bin/lib/opensourcecobol4j/libcobj.jar"),
-        file("${project.projectDir}/compiler_bin/bin/cobj"),
-        file("${project.projectDir}/compiler_bin/bin/cobj-api"),
+        file(libcobjJar),
+        file(cobj),
+        file(cobjApi),
         fileTree("${project.projectDir}/cobol"),
     )
 
