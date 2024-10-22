@@ -55,17 +55,21 @@ tasks.register<Exec>("buildCobol") {
         fileTree("${project.projectDir}/cobol"),
     )
 
+    val javaDir = "${project.projectDir}/app/src/main/java/cobol4j/aws/web/"
+    val jsonDir = "${project.projectDir}/json"
+
     outputs.files(
-        file("${project.projectDir}/app/src/main/java/cobol4j/aws/web/sample.java"),
-        file("${project.projectDir}/app/src/main/java/cobol4j/aws/web/sampleController.java"),
-        file("${project.projectDir}/app/src/main/java/cobol4j/aws/web/sampleRecord.java"),
+        file("${javaDir}/sample.java"),
+        file("${javaDir}/sampleController.java"),
+        file("${javaDir}/sampleRecord.java"),
+        file("${jsonDir}/info_sample.json"),
     )
 
     commandLine("sh", "-c", """
-        ${project.projectDir}/compiler_bin/bin/cobj -info-json-dir=${project.projectDir}/app/src/main/java/cobol4j/aws/web/ -C *.cbl &&
-        mv *.java ${project.projectDir}/app/src/main/java/cobol4j/aws/web/ &&
-        CLASSPATH=:${project.projectDir}/compiler_bin/lib/opensourcecobol4j/libcobj.jar ${project.projectDir}/compiler_bin/bin/cobj-api --output-dir=${project.projectDir}/app/src/main/java/cobol4j/aws/web/ ${project.projectDir}/app/src/main/java/cobol4j/aws/web//info_sample.json &&
-        rm ${project.projectDir}/app/src/main/java/cobol4j/aws/web/info_sample.json
+        mkdir -p ${jsonDir} &&
+        ${project.projectDir}/compiler_bin/bin/cobj -info-json-dir=${jsonDir} -C *.cbl &&
+        mv *.java ${javaDir} &&
+        CLASSPATH=:${project.projectDir}/compiler_bin/lib/opensourcecobol4j/libcobj.jar ${project.projectDir}/compiler_bin/bin/cobj-api --output-dir=${project.projectDir}/app/src/main/java/cobol4j/aws/web/ ${jsonDir}/info_sample.json
     """)
 }
 
