@@ -29,8 +29,10 @@ tasks.register<Exec>("buildCompiler") {
 
     workingDir = opensourcecobol4jDir
 
-    // 入力ファイルと出力ファイルを指定
+    // 入力ファイルを指定
     inputs.files(getGitManagedFiles(opensourcecobol4jDir))
+
+    // 出力ファイルを指定
     outputs.files(
         file(libcobjJar),
         file(cobj),
@@ -52,19 +54,22 @@ tasks.register<Exec>("buildCobol") {
     group = "build"
     description = "Build COBOL source files"
 
-    // 作業ディレクトリを指定
-    workingDir = file("${project.projectDir}/cobol/")
+    val cobolDir = "${project.projectDir}/cobol/"
+    val javaDir = "${project.projectDir}/app/src/main/java/cobol4j/aws/web/"
+    val jsonDir = "${project.projectDir}/json"
 
+    // 作業ディレクトリを指定
+    workingDir = file(cobolDir)
+
+    // 入力ファイルと出力ファイルを指定
     inputs.files(
         file(libcobjJar),
         file(cobj),
         file(cobjApi),
-        fileTree("${project.projectDir}/cobol"),
+        fileTree(cobolDir),
     )
 
-    val javaDir = "${project.projectDir}/app/src/main/java/cobol4j/aws/web/"
-    val jsonDir = "${project.projectDir}/json"
-
+    // 出力ファイルを指定
     outputs.files(
         file("${javaDir}/sample.java"),
         file("${javaDir}/sampleController.java"),
@@ -74,9 +79,9 @@ tasks.register<Exec>("buildCobol") {
 
     commandLine("sh", "-c", """
         mkdir -p ${jsonDir} &&
-        ${project.projectDir}/compiler_bin/bin/cobj -info-json-dir=${jsonDir} -C *.cbl &&
+        ${cobj} -info-json-dir=${jsonDir} -C *.cbl &&
         mv *.java ${javaDir} &&
-        CLASSPATH=:${project.projectDir}/compiler_bin/lib/opensourcecobol4j/libcobj.jar ${project.projectDir}/compiler_bin/bin/cobj-api --output-dir=${project.projectDir}/app/src/main/java/cobol4j/aws/web/ ${jsonDir}/info_sample.json
+        CLASSPATH=:${libcobjJar} ${cobjApi} --output-dir=${javaDir} ${jsonDir}/info_sample.json
     """)
 }
 
