@@ -34,10 +34,6 @@ dependencies {
     }
     implementation(files("lib/libcobj.jar"))
 
-    //implementation("org.springframework.boot:spring-boot-starter")
-    //testImplementation("org.springframework.boot:spring-boot-starter-test") {
-    //    exclude(mapOf("group" to "org.junit.vintage", "module" to "junit-vintage-engine"))
-    //}
     // Use JUnit Jupiter for testing.
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
 
