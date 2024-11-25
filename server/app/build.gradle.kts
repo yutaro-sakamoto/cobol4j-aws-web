@@ -15,6 +15,7 @@ val javaDir = "${project.projectDir}/src/main/java/cobol4j/aws/web/"
 val libDir = "${project.projectDir}/lib"
 val libLibcobjJar = "${libDir}/libcobj.jar"
 val javaPackage = "cobol4j.aws.web"
+val dockerImageTag = "cobol4j-aws-web:latest"
 
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
@@ -158,7 +159,22 @@ tasks.register<Exec>("buildCobol") {
     """)
 }
 
+
 tasks.named("compileJava") {
     dependsOn("buildCobol")
     dependsOn("moveLibcobjJar")
+}
+
+tasks.named("bootJar") {
+    dependsOn("compileJava")
+}
+
+tasks.register<Exec>("buildDockerImage") {
+    dependsOn("bootJar")
+
+    inputs.files(
+        file("Dockerfile"),
+    )
+
+    commandLine("sh", "-c", "docker build -t ${dockerImageTag} .")
 }
