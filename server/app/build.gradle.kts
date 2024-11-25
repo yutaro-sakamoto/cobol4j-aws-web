@@ -165,8 +165,12 @@ tasks.named("compileJava") {
     dependsOn("moveLibcobjJar")
 }
 
-tasks.register<Exec>("buildDockerImage") {
+tasks.named("bootJar") {
     dependsOn("compileJava")
+}
+
+tasks.register<Exec>("buildDockerImage") {
+    dependsOn("bootJar")
 
     inputs.files(
         file("Dockerfile"),
