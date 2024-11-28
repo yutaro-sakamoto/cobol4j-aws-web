@@ -40,6 +40,11 @@ export class ECS extends Construct {
       "../../../../server/app/cobol4j-aws-web.tar",
     );
 
+    const image =
+      process.env.USE_MOCK_DOCKER_IMAGE === "true"
+        ? ecs.ContainerImage.fromRegistry("amazon/amazon-ecs-sample")
+        : ecs.ContainerImage.fromTarball(tarballPath);
+
     // Fargateサービスを作成
     const albEcsService = new ApplicationLoadBalancedFargateService(
       this,
@@ -47,7 +52,7 @@ export class ECS extends Construct {
       {
         cluster,
         taskImageOptions: {
-          image: ecs.ContainerImage.fromTarball(tarballPath),
+          image: image,
           containerPort: 8080,
         },
         assignPublicIp: true,

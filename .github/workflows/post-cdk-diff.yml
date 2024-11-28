@@ -12,6 +12,7 @@ env:
   ROLE_ARN: arn:aws:iam::${{ secrets.AWS_ID }}:role/${{ secrets.ROLE_NAME }}
   SESSION_NAME: gh-oidc-${{ github.run_id }}-${{ github.run_attempt }}
   AWS_CLIENT_VPN_CERTIFICATE_ARN: ${{ secrets.AWS_CLIENT_VPN_CERTIFICATE_ARN }}
+  USE_MOCK_DOCKER_IMAGE: "true"
 
 jobs:
   cdk-diff:

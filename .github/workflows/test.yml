@@ -7,6 +7,7 @@ permissions:
 
 env:
   AWS_CLIENT_VPN_CERTIFICATE_ARN: ${{ secrets.AWS_CLIENT_VPN_CERTIFICATE_ARN }}
+  USE_MOCK_DOCKER_IMAGE: "true"
 
 jobs:
   test:
@@ -14,23 +15,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: "npm"
           cache-dependency-path: "infrastructure/package-lock.json"
-
-      - uses: actions/setup-java@v4
-        with:
-          distribution: "temurin"
-          java-version: "17"
-
-      - name: Build a Docker image
-        working-directory: ./server
-        run: ./gradlew buildDockerImageTarball
 
       - run: npm ci
         working-directory: ./infrastructure
