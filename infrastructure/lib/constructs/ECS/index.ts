@@ -50,8 +50,8 @@ export class ECS extends Construct {
           image: ecs.ContainerImage.fromTarball(tarballPath),
           containerPort: 8080,
         },
-        assignPublicIp: false,
-        publicLoadBalancer: false,
+        assignPublicIp: true,
+        publicLoadBalancer: true,
       },
     );
 
