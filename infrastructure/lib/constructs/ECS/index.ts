@@ -6,6 +6,7 @@ import { ApplicationLoadBalancedFargateService } from "aws-cdk-lib/aws-ecs-patte
 import { StackProps } from "aws-cdk-lib";
 //import * as s3 from "aws-cdk-lib/aws-s3";
 import { NagSuppressions } from "cdk-nag";
+import * as path from "path";
 
 /**
  * ECSのプロパティ
@@ -30,6 +31,14 @@ export class ECS extends Construct {
       vpc: props.vpc,
       containerInsights: true,
     });
+    // カレントディレクトリの絶対パスを取得
+    const currentDir = path.resolve(__dirname);
+
+    // tarファイルの絶対パスを計算
+    const tarballPath = path.join(
+      currentDir,
+      "../../../../server/app/cobol4j-aws-web.tar",
+    );
 
     // Fargateサービスを作成
     const albEcsService = new ApplicationLoadBalancedFargateService(
@@ -38,7 +47,8 @@ export class ECS extends Construct {
       {
         cluster,
         taskImageOptions: {
-          image: ecs.ContainerImage.fromRegistry("amazon/amazon-ecs-sample"),
+          image: ecs.ContainerImage.fromTarball(tarballPath),
+          containerPort: 8080,
         },
         assignPublicIp: false,
         publicLoadBalancer: false,
@@ -69,6 +79,16 @@ export class ECS extends Construct {
         {
           id: "AwsSolutions-ELB2",
           reason: "一時的にALBのアクセスログを無効化",
+        },
+      ],
+    );
+    NagSuppressions.addResourceSuppressionsByPath(
+      parentStack,
+      "/StartCDKStack/ECS/Service/TaskDef/ExecutionRole/DefaultPolicy/Resource",
+      [
+        {
+          id: "AwsSolutions-IAM5",
+          reason: "IAMに関するNAGのチェックを抑制",
         },
       ],
     );

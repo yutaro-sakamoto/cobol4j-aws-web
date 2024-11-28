@@ -16,6 +16,7 @@ val libDir = "${project.projectDir}/lib"
 val libLibcobjJar = "${libDir}/libcobj.jar"
 val javaPackage = "cobol4j.aws.web"
 val dockerImageTag = "cobol4j-aws-web:latest"
+val dockerImageTarball = "cobol4j-aws-web.tar"
 
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
@@ -177,4 +178,14 @@ tasks.register<Exec>("buildDockerImage") {
     )
 
     commandLine("sh", "-c", "docker build -t ${dockerImageTag} .")
+}
+
+tasks.register<Exec>("buildDockerImageTarball") {
+    dependsOn("buildDockerImage")
+
+    outputs.files(
+        file(dockerImageTarball),
+    )
+
+    commandLine("sh", "-c", "docker save -o ${dockerImageTarball} ${dockerImageTag}")
 }

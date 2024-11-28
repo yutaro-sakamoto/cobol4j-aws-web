@@ -24,6 +24,8 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - uses: actions/setup-node@v4
         with:
@@ -31,8 +33,15 @@ jobs:
           cache: "npm"
           cache-dependency-path: "infrastructure/package-lock.json"
 
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
       - name: Deploy
-        working-directory: ./infrastructure
         run: |
+          cd server
+          ./gradlew buildDockerImageTarball
+          cd ../infrastructure
           npm ci
           npx cdk deploy --require-approval never -O output.js

@@ -1,2 +1,3 @@
 src/main/java/cobol4j/aws/web/sample*.java
 lib/
+*.tar

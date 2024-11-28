@@ -14,12 +14,23 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
           cache: "npm"
           cache-dependency-path: "infrastructure/package-lock.json"
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Build a Docker image
+        working-directory: ./server
+        run: ./gradlew buildDockerImageTarball
 
       - run: npm ci
         working-directory: ./infrastructure
