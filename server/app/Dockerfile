@@ -5,11 +5,11 @@ FROM openjdk:17-jdk-alpine
 WORKDIR /app
 
 # 依存関係のコピー
-COPY lib /app/lib
+COPY lib /app
 
 # アプリケーションのJARファイルをコピー
 ARG JAR_FILE=build/libs/app.jar
 COPY ${JAR_FILE} app.jar
 
 # アプリケーションを実行
-ENTRYPOINT ["java", "-cp", "app.jar:lib/*", "org.springframework.boot.loader.JarLauncher"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
