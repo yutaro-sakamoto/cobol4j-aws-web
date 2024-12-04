@@ -48,14 +48,18 @@ jobs:
 
   # dependabotが作成したPull Requestを自動マージする
   auto-merge-dependabot-pr:
-    needs: check-workflows
+    needs:
+      - check-workflows
+      - test
+      - cdk-diff-comment
+      - test-server-app
     if: github.actor == 'dependabot[bot]'
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
-      - run: gh pr merge "${GITHUB_HEAD_REF}" --merge --squash --auto
+      - run: gh pr merge "${GITHUB_HEAD_REF}" --squash --auto
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
