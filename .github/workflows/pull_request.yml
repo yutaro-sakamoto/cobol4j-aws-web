@@ -45,3 +45,17 @@ jobs:
     permissions:
       contents: read
     uses: ./.github/workflows/server-app.yml
+
+  # dependabotが作成したPull Requestを自動マージする
+  auto-merge-dependabot-pr:
+    needs: check-workflows
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: gh pr merge "${GITHUB_HEAD_REF}" --merge --squash --auto
