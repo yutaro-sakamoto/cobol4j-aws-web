@@ -49,9 +49,7 @@ jobs:
   # dependabotが作成したPull Requestを自動マージする
   auto-merge-dependabot-pr:
     needs:
-      - check-workflows
       - test
-      - cdk-diff-comment
       - test-server-app
     if: github.actor == 'dependabot[bot]'
     runs-on: ubuntu-latest
