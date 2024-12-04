@@ -37,7 +37,7 @@ dependencies {
     implementation(files("lib/libcobj.jar"))
 
     // Use JUnit Jupiter for testing.
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.11.3")
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
