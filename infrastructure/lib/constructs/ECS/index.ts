@@ -61,7 +61,7 @@ export class ECS extends Construct {
     );
 
     albEcsService.targetGroup.configureHealthCheck({
-      path: "/sample?DATA1=1&DATA2=2&DATA3=3",
+      path: "/health_check",
       port: "8080",
     });
 
