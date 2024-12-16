@@ -60,6 +60,11 @@ export class ECS extends Construct {
       },
     );
 
+    albEcsService.targetGroup.configureHealthCheck({
+      path: "/health_check",
+      port: "8080",
+    });
+
     this.dnsName = albEcsService.loadBalancer.loadBalancerDnsName;
   }
 
