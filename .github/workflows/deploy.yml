@@ -39,9 +39,4 @@ jobs:
           java-version: "17"
 
       - name: Deploy
-        run: |
-          cd server
-          ./gradlew buildDockerImageTarball
-          cd ../infrastructure
-          npm ci
-          npx cdk deploy --require-approval never -O output.js
+        run: ./deploy
