@@ -26,7 +26,7 @@ jobs:
           aws-region: ap-northeast-1
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Run `cdk diff`
         working-directory: ./infrastructure
