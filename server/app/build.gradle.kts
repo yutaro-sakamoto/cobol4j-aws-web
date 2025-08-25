@@ -30,7 +30,7 @@ repositories {
 }
 
 dependencies {
-    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.4"))
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:3.5.5"))
     implementation("org.springframework.boot:spring-boot-starter-web") {
         exclude(group = "org.springframework.boot", module = "spring-boot-starter-logging")
     }
