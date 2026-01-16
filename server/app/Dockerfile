@@ -11,5 +11,7 @@ COPY lib /app
 ARG JAR_FILE=build/libs/app.jar
 COPY ${JAR_FILE} app.jar
 
+RUN apk update && apk add --no-cache bash
+
 # アプリケーションを実行
 ENTRYPOINT ["java", "-jar", "app.jar"]

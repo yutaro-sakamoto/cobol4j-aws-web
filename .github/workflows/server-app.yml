@@ -34,3 +34,13 @@ jobs:
       #- name: Run tests
       #  if: ${{ github.event.inputs.run_tests }}
       #  run: ./gradlew test
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          image-ref: cobol4j-aws-web:latest
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
